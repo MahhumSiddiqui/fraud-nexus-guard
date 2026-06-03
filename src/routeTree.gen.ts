@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransactionsRouteImport } from './routes/transactions'
 import { Route as MonitoringRouteImport } from './routes/monitoring'
+import { Route as InvestigationsRouteImport } from './routes/investigations'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -22,6 +23,11 @@ const TransactionsRoute = TransactionsRouteImport.update({
 const MonitoringRoute = MonitoringRouteImport.update({
   id: '/monitoring',
   path: '/monitoring',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvestigationsRoute = InvestigationsRouteImport.update({
+  id: '/investigations',
+  path: '/investigations',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AlertsRoute = AlertsRouteImport.update({
@@ -38,12 +44,14 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/investigations': typeof InvestigationsRoute
   '/monitoring': typeof MonitoringRoute
   '/transactions': typeof TransactionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/investigations': typeof InvestigationsRoute
   '/monitoring': typeof MonitoringRoute
   '/transactions': typeof TransactionsRoute
 }
@@ -51,20 +59,33 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/investigations': typeof InvestigationsRoute
   '/monitoring': typeof MonitoringRoute
   '/transactions': typeof TransactionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/alerts' | '/monitoring' | '/transactions'
+  fullPaths:
+    | '/'
+    | '/alerts'
+    | '/investigations'
+    | '/monitoring'
+    | '/transactions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/alerts' | '/monitoring' | '/transactions'
-  id: '__root__' | '/' | '/alerts' | '/monitoring' | '/transactions'
+  to: '/' | '/alerts' | '/investigations' | '/monitoring' | '/transactions'
+  id:
+    | '__root__'
+    | '/'
+    | '/alerts'
+    | '/investigations'
+    | '/monitoring'
+    | '/transactions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsRoute: typeof AlertsRoute
+  InvestigationsRoute: typeof InvestigationsRoute
   MonitoringRoute: typeof MonitoringRoute
   TransactionsRoute: typeof TransactionsRoute
 }
@@ -83,6 +104,13 @@ declare module '@tanstack/react-router' {
       path: '/monitoring'
       fullPath: '/monitoring'
       preLoaderRoute: typeof MonitoringRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/investigations': {
+      id: '/investigations'
+      path: '/investigations'
+      fullPath: '/investigations'
+      preLoaderRoute: typeof InvestigationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/alerts': {
@@ -105,6 +133,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
+  InvestigationsRoute: InvestigationsRoute,
   MonitoringRoute: MonitoringRoute,
   TransactionsRoute: TransactionsRoute,
 }
