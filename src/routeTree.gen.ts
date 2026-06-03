@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransactionsRouteImport } from './routes/transactions'
 import { Route as SimulationRouteImport } from './routes/simulation'
 import { Route as MonitoringRouteImport } from './routes/monitoring'
+import { Route as ModelsRouteImport } from './routes/models'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as InvestigationsRouteImport } from './routes/investigations'
 import { Route as GraphRouteImport } from './routes/graph'
@@ -35,6 +36,11 @@ const SimulationRoute = SimulationRouteImport.update({
 const MonitoringRoute = MonitoringRouteImport.update({
   id: '/monitoring',
   path: '/monitoring',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModelsRoute = ModelsRouteImport.update({
+  id: '/models',
+  path: '/models',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MemoryRoute = MemoryRouteImport.update({
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
+  '/models': typeof ModelsRoute
   '/monitoring': typeof MonitoringRoute
   '/simulation': typeof SimulationRoute
   '/transactions': typeof TransactionsRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
+  '/models': typeof ModelsRoute
   '/monitoring': typeof MonitoringRoute
   '/simulation': typeof SimulationRoute
   '/transactions': typeof TransactionsRoute
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
+  '/models': typeof ModelsRoute
   '/monitoring': typeof MonitoringRoute
   '/simulation': typeof SimulationRoute
   '/transactions': typeof TransactionsRoute
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/graph'
     | '/investigations'
     | '/memory'
+    | '/models'
     | '/monitoring'
     | '/simulation'
     | '/transactions'
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
     | '/graph'
     | '/investigations'
     | '/memory'
+    | '/models'
     | '/monitoring'
     | '/simulation'
     | '/transactions'
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '/graph'
     | '/investigations'
     | '/memory'
+    | '/models'
     | '/monitoring'
     | '/simulation'
     | '/transactions'
@@ -181,6 +193,7 @@ export interface RootRouteChildren {
   GraphRoute: typeof GraphRoute
   InvestigationsRoute: typeof InvestigationsRoute
   MemoryRoute: typeof MemoryRoute
+  ModelsRoute: typeof ModelsRoute
   MonitoringRoute: typeof MonitoringRoute
   SimulationRoute: typeof SimulationRoute
   TransactionsRoute: typeof TransactionsRoute
@@ -207,6 +220,13 @@ declare module '@tanstack/react-router' {
       path: '/monitoring'
       fullPath: '/monitoring'
       preLoaderRoute: typeof MonitoringRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/models': {
+      id: '/models'
+      path: '/models'
+      fullPath: '/models'
+      preLoaderRoute: typeof ModelsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/memory': {
@@ -285,6 +305,7 @@ const rootRouteChildren: RootRouteChildren = {
   GraphRoute: GraphRoute,
   InvestigationsRoute: InvestigationsRoute,
   MemoryRoute: MemoryRoute,
+  ModelsRoute: ModelsRoute,
   MonitoringRoute: MonitoringRoute,
   SimulationRoute: SimulationRoute,
   TransactionsRoute: TransactionsRoute,
