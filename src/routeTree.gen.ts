@@ -14,6 +14,7 @@ import { Route as MonitoringRouteImport } from './routes/monitoring'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as InvestigationsRouteImport } from './routes/investigations'
 import { Route as GraphRouteImport } from './routes/graph'
+import { Route as ForecastingRouteImport } from './routes/forecasting'
 import { Route as DnaRouteImport } from './routes/dna'
 import { Route as CopilotRouteImport } from './routes/copilot'
 import { Route as AlertsRouteImport } from './routes/alerts'
@@ -44,6 +45,11 @@ const GraphRoute = GraphRouteImport.update({
   path: '/graph',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForecastingRoute = ForecastingRouteImport.update({
+  id: '/forecasting',
+  path: '/forecasting',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DnaRoute = DnaRouteImport.update({
   id: '/dna',
   path: '/dna',
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/alerts': typeof AlertsRoute
   '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
+  '/forecasting': typeof ForecastingRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/alerts': typeof AlertsRoute
   '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
+  '/forecasting': typeof ForecastingRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/alerts': typeof AlertsRoute
   '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
+  '/forecasting': typeof ForecastingRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/copilot'
     | '/dna'
+    | '/forecasting'
     | '/graph'
     | '/investigations'
     | '/memory'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/copilot'
     | '/dna'
+    | '/forecasting'
     | '/graph'
     | '/investigations'
     | '/memory'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/copilot'
     | '/dna'
+    | '/forecasting'
     | '/graph'
     | '/investigations'
     | '/memory'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   AlertsRoute: typeof AlertsRoute
   CopilotRoute: typeof CopilotRoute
   DnaRoute: typeof DnaRoute
+  ForecastingRoute: typeof ForecastingRoute
   GraphRoute: typeof GraphRoute
   InvestigationsRoute: typeof InvestigationsRoute
   MemoryRoute: typeof MemoryRoute
@@ -184,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GraphRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forecasting': {
+      id: '/forecasting'
+      path: '/forecasting'
+      fullPath: '/forecasting'
+      preLoaderRoute: typeof ForecastingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dna': {
       id: '/dna'
       path: '/dna'
@@ -220,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   AlertsRoute: AlertsRoute,
   CopilotRoute: CopilotRoute,
   DnaRoute: DnaRoute,
+  ForecastingRoute: ForecastingRoute,
   GraphRoute: GraphRoute,
   InvestigationsRoute: InvestigationsRoute,
   MemoryRoute: MemoryRoute,
