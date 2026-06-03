@@ -6,7 +6,14 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const NAV = [
+type NavItem = {
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+  badge?: string;
+};
+const NAV: { group: string; items: NavItem[] }[] = [
   { group: "Intelligence", items: [
     { to: "/", label: "Executive", icon: LayoutDashboard, exact: true },
     { to: "/monitoring", label: "Real-Time Monitoring", icon: Activity, badge: "LIVE" },
@@ -29,7 +36,7 @@ const NAV = [
     { to: "/models", label: "Model Intelligence", icon: Cpu },
     { to: "/admin", label: "Administration", icon: Settings },
   ]},
-] as const;
+];
 
 export function AppSidebar() {
   const path = useRouterState({ select: s => s.location.pathname });
