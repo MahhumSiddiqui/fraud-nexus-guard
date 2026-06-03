@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransactionsRouteImport } from './routes/transactions'
+import { Route as SimulationRouteImport } from './routes/simulation'
 import { Route as MonitoringRouteImport } from './routes/monitoring'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as InvestigationsRouteImport } from './routes/investigations'
@@ -23,6 +24,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const TransactionsRoute = TransactionsRouteImport.update({
   id: '/transactions',
   path: '/transactions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SimulationRoute = SimulationRouteImport.update({
+  id: '/simulation',
+  path: '/simulation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MonitoringRoute = MonitoringRouteImport.update({
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
   '/monitoring': typeof MonitoringRoute
+  '/simulation': typeof SimulationRoute
   '/transactions': typeof TransactionsRoute
 }
 export interface FileRoutesByTo {
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
   '/monitoring': typeof MonitoringRoute
+  '/simulation': typeof SimulationRoute
   '/transactions': typeof TransactionsRoute
 }
 export interface FileRoutesById {
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
   '/monitoring': typeof MonitoringRoute
+  '/simulation': typeof SimulationRoute
   '/transactions': typeof TransactionsRoute
 }
 export interface FileRouteTypes {
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/investigations'
     | '/memory'
     | '/monitoring'
+    | '/simulation'
     | '/transactions'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/investigations'
     | '/memory'
     | '/monitoring'
+    | '/simulation'
     | '/transactions'
   id:
     | '__root__'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/investigations'
     | '/memory'
     | '/monitoring'
+    | '/simulation'
     | '/transactions'
   fileRoutesById: FileRoutesById
 }
@@ -157,6 +169,7 @@ export interface RootRouteChildren {
   InvestigationsRoute: typeof InvestigationsRoute
   MemoryRoute: typeof MemoryRoute
   MonitoringRoute: typeof MonitoringRoute
+  SimulationRoute: typeof SimulationRoute
   TransactionsRoute: typeof TransactionsRoute
 }
 
@@ -167,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/transactions'
       fullPath: '/transactions'
       preLoaderRoute: typeof TransactionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/simulation': {
+      id: '/simulation'
+      path: '/simulation'
+      fullPath: '/simulation'
+      preLoaderRoute: typeof SimulationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/monitoring': {
@@ -245,6 +265,7 @@ const rootRouteChildren: RootRouteChildren = {
   InvestigationsRoute: InvestigationsRoute,
   MemoryRoute: MemoryRoute,
   MonitoringRoute: MonitoringRoute,
+  SimulationRoute: SimulationRoute,
   TransactionsRoute: TransactionsRoute,
 }
 export const routeTree = rootRouteImport
