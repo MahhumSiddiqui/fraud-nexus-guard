@@ -74,7 +74,7 @@ export function AppSidebar() {
                       {active && <span className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r bg-primary" />}
                       <Icon className={cn("h-4 w-4 shrink-0", active && "text-primary")} />
                       <span className="flex-1 truncate">{item.label}</span>
-                      {"badge" in item && item.badge && (
+                      {item.badge && (
                         <span className={cn(
                           "text-[9px] mono px-1.5 py-0.5 rounded uppercase tracking-wider",
                           item.badge === "LIVE" ? "bg-status-clear/15 text-status-clear" : "bg-risk-high/15 text-risk-high",
