@@ -18,6 +18,7 @@ import { Route as GraphRouteImport } from './routes/graph'
 import { Route as ForecastingRouteImport } from './routes/forecasting'
 import { Route as DnaRouteImport } from './routes/dna'
 import { Route as CopilotRouteImport } from './routes/copilot'
+import { Route as ComplianceRouteImport } from './routes/compliance'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -66,6 +67,11 @@ const CopilotRoute = CopilotRouteImport.update({
   path: '/copilot',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ComplianceRoute = ComplianceRouteImport.update({
+  id: '/compliance',
+  path: '/compliance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AlertsRoute = AlertsRouteImport.update({
   id: '/alerts',
   path: '/alerts',
@@ -80,6 +86,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/compliance': typeof ComplianceRoute
   '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
   '/forecasting': typeof ForecastingRoute
@@ -93,6 +100,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/compliance': typeof ComplianceRoute
   '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
   '/forecasting': typeof ForecastingRoute
@@ -107,6 +115,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/compliance': typeof ComplianceRoute
   '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
   '/forecasting': typeof ForecastingRoute
@@ -122,6 +131,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/alerts'
+    | '/compliance'
     | '/copilot'
     | '/dna'
     | '/forecasting'
@@ -135,6 +145,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/alerts'
+    | '/compliance'
     | '/copilot'
     | '/dna'
     | '/forecasting'
@@ -148,6 +159,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/alerts'
+    | '/compliance'
     | '/copilot'
     | '/dna'
     | '/forecasting'
@@ -162,6 +174,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsRoute: typeof AlertsRoute
+  ComplianceRoute: typeof ComplianceRoute
   CopilotRoute: typeof CopilotRoute
   DnaRoute: typeof DnaRoute
   ForecastingRoute: typeof ForecastingRoute
@@ -238,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CopilotRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compliance': {
+      id: '/compliance'
+      path: '/compliance'
+      fullPath: '/compliance'
+      preLoaderRoute: typeof ComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/alerts': {
       id: '/alerts'
       path: '/alerts'
@@ -258,6 +278,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
+  ComplianceRoute: ComplianceRoute,
   CopilotRoute: CopilotRoute,
   DnaRoute: DnaRoute,
   ForecastingRoute: ForecastingRoute,
