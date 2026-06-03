@@ -15,6 +15,7 @@ import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as InvestigationsRouteImport } from './routes/investigations'
 import { Route as GraphRouteImport } from './routes/graph'
 import { Route as DnaRouteImport } from './routes/dna'
+import { Route as CopilotRouteImport } from './routes/copilot'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -48,6 +49,11 @@ const DnaRoute = DnaRouteImport.update({
   path: '/dna',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CopilotRoute = CopilotRouteImport.update({
+  id: '/copilot',
+  path: '/copilot',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AlertsRoute = AlertsRouteImport.update({
   id: '/alerts',
   path: '/alerts',
@@ -62,6 +68,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/alerts'
+    | '/copilot'
     | '/dna'
     | '/graph'
     | '/investigations'
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/alerts'
+    | '/copilot'
     | '/dna'
     | '/graph'
     | '/investigations'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/alerts'
+    | '/copilot'
     | '/dna'
     | '/graph'
     | '/investigations'
@@ -126,6 +138,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsRoute: typeof AlertsRoute
+  CopilotRoute: typeof CopilotRoute
   DnaRoute: typeof DnaRoute
   GraphRoute: typeof GraphRoute
   InvestigationsRoute: typeof InvestigationsRoute
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DnaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/copilot': {
+      id: '/copilot'
+      path: '/copilot'
+      fullPath: '/copilot'
+      preLoaderRoute: typeof CopilotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/alerts': {
       id: '/alerts'
       path: '/alerts'
@@ -198,6 +218,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
+  CopilotRoute: CopilotRoute,
   DnaRoute: DnaRoute,
   GraphRoute: GraphRoute,
   InvestigationsRoute: InvestigationsRoute,
