@@ -14,6 +14,7 @@ import { Route as MonitoringRouteImport } from './routes/monitoring'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as InvestigationsRouteImport } from './routes/investigations'
 import { Route as GraphRouteImport } from './routes/graph'
+import { Route as DnaRouteImport } from './routes/dna'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -42,6 +43,11 @@ const GraphRoute = GraphRouteImport.update({
   path: '/graph',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DnaRoute = DnaRouteImport.update({
+  id: '/dna',
+  path: '/dna',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AlertsRoute = AlertsRouteImport.update({
   id: '/alerts',
   path: '/alerts',
@@ -56,6 +62,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/dna': typeof DnaRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/dna': typeof DnaRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/dna': typeof DnaRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/alerts'
+    | '/dna'
     | '/graph'
     | '/investigations'
     | '/memory'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/alerts'
+    | '/dna'
     | '/graph'
     | '/investigations'
     | '/memory'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/alerts'
+    | '/dna'
     | '/graph'
     | '/investigations'
     | '/memory'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsRoute: typeof AlertsRoute
+  DnaRoute: typeof DnaRoute
   GraphRoute: typeof GraphRoute
   InvestigationsRoute: typeof InvestigationsRoute
   MemoryRoute: typeof MemoryRoute
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GraphRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dna': {
+      id: '/dna'
+      path: '/dna'
+      fullPath: '/dna'
+      preLoaderRoute: typeof DnaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/alerts': {
       id: '/alerts'
       path: '/alerts'
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
+  DnaRoute: DnaRoute,
   GraphRoute: GraphRoute,
   InvestigationsRoute: InvestigationsRoute,
   MemoryRoute: MemoryRoute,
