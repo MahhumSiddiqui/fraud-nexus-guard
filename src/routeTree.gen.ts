@@ -9,8 +9,86 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TransactionsRouteImport } from './routes/transactions'
+import { Route as SimulationRouteImport } from './routes/simulation'
+import { Route as MonitoringRouteImport } from './routes/monitoring'
+import { Route as ModelsRouteImport } from './routes/models'
+import { Route as MemoryRouteImport } from './routes/memory'
+import { Route as InvestigationsRouteImport } from './routes/investigations'
+import { Route as GraphRouteImport } from './routes/graph'
+import { Route as ForecastingRouteImport } from './routes/forecasting'
+import { Route as DnaRouteImport } from './routes/dna'
+import { Route as CopilotRouteImport } from './routes/copilot'
+import { Route as ComplianceRouteImport } from './routes/compliance'
+import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TransactionsRoute = TransactionsRouteImport.update({
+  id: '/transactions',
+  path: '/transactions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SimulationRoute = SimulationRouteImport.update({
+  id: '/simulation',
+  path: '/simulation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MonitoringRoute = MonitoringRouteImport.update({
+  id: '/monitoring',
+  path: '/monitoring',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModelsRoute = ModelsRouteImport.update({
+  id: '/models',
+  path: '/models',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemoryRoute = MemoryRouteImport.update({
+  id: '/memory',
+  path: '/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvestigationsRoute = InvestigationsRouteImport.update({
+  id: '/investigations',
+  path: '/investigations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GraphRoute = GraphRouteImport.update({
+  id: '/graph',
+  path: '/graph',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForecastingRoute = ForecastingRouteImport.update({
+  id: '/forecasting',
+  path: '/forecasting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DnaRoute = DnaRouteImport.update({
+  id: '/dna',
+  path: '/dna',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CopilotRoute = CopilotRouteImport.update({
+  id: '/copilot',
+  path: '/copilot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComplianceRoute = ComplianceRouteImport.update({
+  id: '/compliance',
+  path: '/compliance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +97,214 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/alerts': typeof AlertsRoute
+  '/compliance': typeof ComplianceRoute
+  '/copilot': typeof CopilotRoute
+  '/dna': typeof DnaRoute
+  '/forecasting': typeof ForecastingRoute
+  '/graph': typeof GraphRoute
+  '/investigations': typeof InvestigationsRoute
+  '/memory': typeof MemoryRoute
+  '/models': typeof ModelsRoute
+  '/monitoring': typeof MonitoringRoute
+  '/simulation': typeof SimulationRoute
+  '/transactions': typeof TransactionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/alerts': typeof AlertsRoute
+  '/compliance': typeof ComplianceRoute
+  '/copilot': typeof CopilotRoute
+  '/dna': typeof DnaRoute
+  '/forecasting': typeof ForecastingRoute
+  '/graph': typeof GraphRoute
+  '/investigations': typeof InvestigationsRoute
+  '/memory': typeof MemoryRoute
+  '/models': typeof ModelsRoute
+  '/monitoring': typeof MonitoringRoute
+  '/simulation': typeof SimulationRoute
+  '/transactions': typeof TransactionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/alerts': typeof AlertsRoute
+  '/compliance': typeof ComplianceRoute
+  '/copilot': typeof CopilotRoute
+  '/dna': typeof DnaRoute
+  '/forecasting': typeof ForecastingRoute
+  '/graph': typeof GraphRoute
+  '/investigations': typeof InvestigationsRoute
+  '/memory': typeof MemoryRoute
+  '/models': typeof ModelsRoute
+  '/monitoring': typeof MonitoringRoute
+  '/simulation': typeof SimulationRoute
+  '/transactions': typeof TransactionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/alerts'
+    | '/compliance'
+    | '/copilot'
+    | '/dna'
+    | '/forecasting'
+    | '/graph'
+    | '/investigations'
+    | '/memory'
+    | '/models'
+    | '/monitoring'
+    | '/simulation'
+    | '/transactions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/alerts'
+    | '/compliance'
+    | '/copilot'
+    | '/dna'
+    | '/forecasting'
+    | '/graph'
+    | '/investigations'
+    | '/memory'
+    | '/models'
+    | '/monitoring'
+    | '/simulation'
+    | '/transactions'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/alerts'
+    | '/compliance'
+    | '/copilot'
+    | '/dna'
+    | '/forecasting'
+    | '/graph'
+    | '/investigations'
+    | '/memory'
+    | '/models'
+    | '/monitoring'
+    | '/simulation'
+    | '/transactions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  AlertsRoute: typeof AlertsRoute
+  ComplianceRoute: typeof ComplianceRoute
+  CopilotRoute: typeof CopilotRoute
+  DnaRoute: typeof DnaRoute
+  ForecastingRoute: typeof ForecastingRoute
+  GraphRoute: typeof GraphRoute
+  InvestigationsRoute: typeof InvestigationsRoute
+  MemoryRoute: typeof MemoryRoute
+  ModelsRoute: typeof ModelsRoute
+  MonitoringRoute: typeof MonitoringRoute
+  SimulationRoute: typeof SimulationRoute
+  TransactionsRoute: typeof TransactionsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/transactions': {
+      id: '/transactions'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof TransactionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/simulation': {
+      id: '/simulation'
+      path: '/simulation'
+      fullPath: '/simulation'
+      preLoaderRoute: typeof SimulationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/monitoring': {
+      id: '/monitoring'
+      path: '/monitoring'
+      fullPath: '/monitoring'
+      preLoaderRoute: typeof MonitoringRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/models': {
+      id: '/models'
+      path: '/models'
+      fullPath: '/models'
+      preLoaderRoute: typeof ModelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memory': {
+      id: '/memory'
+      path: '/memory'
+      fullPath: '/memory'
+      preLoaderRoute: typeof MemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/investigations': {
+      id: '/investigations'
+      path: '/investigations'
+      fullPath: '/investigations'
+      preLoaderRoute: typeof InvestigationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/graph': {
+      id: '/graph'
+      path: '/graph'
+      fullPath: '/graph'
+      preLoaderRoute: typeof GraphRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forecasting': {
+      id: '/forecasting'
+      path: '/forecasting'
+      fullPath: '/forecasting'
+      preLoaderRoute: typeof ForecastingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dna': {
+      id: '/dna'
+      path: '/dna'
+      fullPath: '/dna'
+      preLoaderRoute: typeof DnaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/copilot': {
+      id: '/copilot'
+      path: '/copilot'
+      fullPath: '/copilot'
+      preLoaderRoute: typeof CopilotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compliance': {
+      id: '/compliance'
+      path: '/compliance'
+      fullPath: '/compliance'
+      preLoaderRoute: typeof ComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +317,20 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  AlertsRoute: AlertsRoute,
+  ComplianceRoute: ComplianceRoute,
+  CopilotRoute: CopilotRoute,
+  DnaRoute: DnaRoute,
+  ForecastingRoute: ForecastingRoute,
+  GraphRoute: GraphRoute,
+  InvestigationsRoute: InvestigationsRoute,
+  MemoryRoute: MemoryRoute,
+  ModelsRoute: ModelsRoute,
+  MonitoringRoute: MonitoringRoute,
+  SimulationRoute: SimulationRoute,
+  TransactionsRoute: TransactionsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
