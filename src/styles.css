@@ -191,6 +191,27 @@
     font-family: var(--font-sans);
     font-feature-settings: "cv11", "ss01", "ss03";
     -webkit-font-smoothing: antialiased;
+    scrollbar-color: var(--surface-3) var(--sidebar);
+  }
+
+  /* WebKit scrollbars — match AFIOS dark theme */
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: var(--sidebar);
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--surface-3);
+    border-radius: 4px;
+    border: 2px solid var(--sidebar);
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--border-strong);
+  }
+  *::-webkit-scrollbar-corner {
+    background: var(--sidebar);
   }
   /* Subtle terminal-style grid backdrop */
   body::before {
