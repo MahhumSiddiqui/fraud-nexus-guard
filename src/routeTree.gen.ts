@@ -11,15 +11,21 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransactionsRouteImport } from './routes/transactions'
 import { Route as SimulationRouteImport } from './routes/simulation'
+import { Route as RiskRouteImport } from './routes/risk'
 import { Route as MonitoringRouteImport } from './routes/monitoring'
 import { Route as ModelsRouteImport } from './routes/models'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as InvestigationsRouteImport } from './routes/investigations'
 import { Route as GraphRouteImport } from './routes/graph'
+import { Route as GovernanceRouteImport } from './routes/governance'
 import { Route as ForecastingRouteImport } from './routes/forecasting'
+import { Route as FeedbackRouteImport } from './routes/feedback'
+import { Route as FeaturesRouteImport } from './routes/features'
+import { Route as EnterpriseRouteImport } from './routes/enterprise'
 import { Route as DnaRouteImport } from './routes/dna'
 import { Route as CopilotRouteImport } from './routes/copilot'
 import { Route as ComplianceRouteImport } from './routes/compliance'
+import { Route as CommandRouteImport } from './routes/command'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -32,6 +38,11 @@ const TransactionsRoute = TransactionsRouteImport.update({
 const SimulationRoute = SimulationRouteImport.update({
   id: '/simulation',
   path: '/simulation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RiskRoute = RiskRouteImport.update({
+  id: '/risk',
+  path: '/risk',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MonitoringRoute = MonitoringRouteImport.update({
@@ -59,9 +70,29 @@ const GraphRoute = GraphRouteImport.update({
   path: '/graph',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GovernanceRoute = GovernanceRouteImport.update({
+  id: '/governance',
+  path: '/governance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForecastingRoute = ForecastingRouteImport.update({
   id: '/forecasting',
   path: '/forecasting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackRoute = FeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeaturesRoute = FeaturesRouteImport.update({
+  id: '/features',
+  path: '/features',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnterpriseRoute = EnterpriseRouteImport.update({
+  id: '/enterprise',
+  path: '/enterprise',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DnaRoute = DnaRouteImport.update({
@@ -77,6 +108,11 @@ const CopilotRoute = CopilotRouteImport.update({
 const ComplianceRoute = ComplianceRouteImport.update({
   id: '/compliance',
   path: '/compliance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommandRoute = CommandRouteImport.update({
+  id: '/command',
+  path: '/command',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AlertsRoute = AlertsRouteImport.update({
@@ -99,15 +135,21 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/alerts': typeof AlertsRoute
+  '/command': typeof CommandRoute
   '/compliance': typeof ComplianceRoute
   '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
+  '/enterprise': typeof EnterpriseRoute
+  '/features': typeof FeaturesRoute
+  '/feedback': typeof FeedbackRoute
   '/forecasting': typeof ForecastingRoute
+  '/governance': typeof GovernanceRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
   '/models': typeof ModelsRoute
   '/monitoring': typeof MonitoringRoute
+  '/risk': typeof RiskRoute
   '/simulation': typeof SimulationRoute
   '/transactions': typeof TransactionsRoute
 }
@@ -115,15 +157,21 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/alerts': typeof AlertsRoute
+  '/command': typeof CommandRoute
   '/compliance': typeof ComplianceRoute
   '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
+  '/enterprise': typeof EnterpriseRoute
+  '/features': typeof FeaturesRoute
+  '/feedback': typeof FeedbackRoute
   '/forecasting': typeof ForecastingRoute
+  '/governance': typeof GovernanceRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
   '/models': typeof ModelsRoute
   '/monitoring': typeof MonitoringRoute
+  '/risk': typeof RiskRoute
   '/simulation': typeof SimulationRoute
   '/transactions': typeof TransactionsRoute
 }
@@ -132,15 +180,21 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/alerts': typeof AlertsRoute
+  '/command': typeof CommandRoute
   '/compliance': typeof ComplianceRoute
   '/copilot': typeof CopilotRoute
   '/dna': typeof DnaRoute
+  '/enterprise': typeof EnterpriseRoute
+  '/features': typeof FeaturesRoute
+  '/feedback': typeof FeedbackRoute
   '/forecasting': typeof ForecastingRoute
+  '/governance': typeof GovernanceRoute
   '/graph': typeof GraphRoute
   '/investigations': typeof InvestigationsRoute
   '/memory': typeof MemoryRoute
   '/models': typeof ModelsRoute
   '/monitoring': typeof MonitoringRoute
+  '/risk': typeof RiskRoute
   '/simulation': typeof SimulationRoute
   '/transactions': typeof TransactionsRoute
 }
@@ -150,15 +204,21 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/alerts'
+    | '/command'
     | '/compliance'
     | '/copilot'
     | '/dna'
+    | '/enterprise'
+    | '/features'
+    | '/feedback'
     | '/forecasting'
+    | '/governance'
     | '/graph'
     | '/investigations'
     | '/memory'
     | '/models'
     | '/monitoring'
+    | '/risk'
     | '/simulation'
     | '/transactions'
   fileRoutesByTo: FileRoutesByTo
@@ -166,15 +226,21 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/alerts'
+    | '/command'
     | '/compliance'
     | '/copilot'
     | '/dna'
+    | '/enterprise'
+    | '/features'
+    | '/feedback'
     | '/forecasting'
+    | '/governance'
     | '/graph'
     | '/investigations'
     | '/memory'
     | '/models'
     | '/monitoring'
+    | '/risk'
     | '/simulation'
     | '/transactions'
   id:
@@ -182,15 +248,21 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/alerts'
+    | '/command'
     | '/compliance'
     | '/copilot'
     | '/dna'
+    | '/enterprise'
+    | '/features'
+    | '/feedback'
     | '/forecasting'
+    | '/governance'
     | '/graph'
     | '/investigations'
     | '/memory'
     | '/models'
     | '/monitoring'
+    | '/risk'
     | '/simulation'
     | '/transactions'
   fileRoutesById: FileRoutesById
@@ -199,15 +271,21 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AlertsRoute: typeof AlertsRoute
+  CommandRoute: typeof CommandRoute
   ComplianceRoute: typeof ComplianceRoute
   CopilotRoute: typeof CopilotRoute
   DnaRoute: typeof DnaRoute
+  EnterpriseRoute: typeof EnterpriseRoute
+  FeaturesRoute: typeof FeaturesRoute
+  FeedbackRoute: typeof FeedbackRoute
   ForecastingRoute: typeof ForecastingRoute
+  GovernanceRoute: typeof GovernanceRoute
   GraphRoute: typeof GraphRoute
   InvestigationsRoute: typeof InvestigationsRoute
   MemoryRoute: typeof MemoryRoute
   ModelsRoute: typeof ModelsRoute
   MonitoringRoute: typeof MonitoringRoute
+  RiskRoute: typeof RiskRoute
   SimulationRoute: typeof SimulationRoute
   TransactionsRoute: typeof TransactionsRoute
 }
@@ -226,6 +304,13 @@ declare module '@tanstack/react-router' {
       path: '/simulation'
       fullPath: '/simulation'
       preLoaderRoute: typeof SimulationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/risk': {
+      id: '/risk'
+      path: '/risk'
+      fullPath: '/risk'
+      preLoaderRoute: typeof RiskRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/monitoring': {
@@ -263,11 +348,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GraphRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/governance': {
+      id: '/governance'
+      path: '/governance'
+      fullPath: '/governance'
+      preLoaderRoute: typeof GovernanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forecasting': {
       id: '/forecasting'
       path: '/forecasting'
       fullPath: '/forecasting'
       preLoaderRoute: typeof ForecastingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/features': {
+      id: '/features'
+      path: '/features'
+      fullPath: '/features'
+      preLoaderRoute: typeof FeaturesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/enterprise': {
+      id: '/enterprise'
+      path: '/enterprise'
+      fullPath: '/enterprise'
+      preLoaderRoute: typeof EnterpriseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dna': {
@@ -289,6 +402,13 @@ declare module '@tanstack/react-router' {
       path: '/compliance'
       fullPath: '/compliance'
       preLoaderRoute: typeof ComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/command': {
+      id: '/command'
+      path: '/command'
+      fullPath: '/command'
+      preLoaderRoute: typeof CommandRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/alerts': {
@@ -319,28 +439,24 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AlertsRoute: AlertsRoute,
+  CommandRoute: CommandRoute,
   ComplianceRoute: ComplianceRoute,
   CopilotRoute: CopilotRoute,
   DnaRoute: DnaRoute,
+  EnterpriseRoute: EnterpriseRoute,
+  FeaturesRoute: FeaturesRoute,
+  FeedbackRoute: FeedbackRoute,
   ForecastingRoute: ForecastingRoute,
+  GovernanceRoute: GovernanceRoute,
   GraphRoute: GraphRoute,
   InvestigationsRoute: InvestigationsRoute,
   MemoryRoute: MemoryRoute,
   ModelsRoute: ModelsRoute,
   MonitoringRoute: MonitoringRoute,
+  RiskRoute: RiskRoute,
   SimulationRoute: SimulationRoute,
   TransactionsRoute: TransactionsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
