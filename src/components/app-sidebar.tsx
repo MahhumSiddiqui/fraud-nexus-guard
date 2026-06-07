@@ -1,8 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  Activity, AlertTriangle, BarChart3, Bot, Boxes, Briefcase,
-  Building2, Cpu, FileSearch, Fingerprint, GitBranch, LayoutDashboard,
-  LineChart, Radar, Settings, ShieldCheck, Sparkles, TrendingUp,
+  Activity, AlertTriangle, Bot, Boxes, Brain, Briefcase, Building2,
+  Cpu, Database, FileSearch, Fingerprint, Gauge, GitBranch, LayoutDashboard,
+  Radar, Rocket, Settings, ShieldCheck, Sparkles, TrendingUp, Workflow,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -14,8 +14,11 @@ type NavItem = {
   badge?: string;
 };
 const NAV: { group: string; items: NavItem[] }[] = [
-  { group: "Intelligence", items: [
+  { group: "Command", items: [
+    { to: "/command", label: "Fraud Command Center", icon: Rocket, badge: "NEW" },
     { to: "/", label: "Executive", icon: LayoutDashboard, exact: true },
+  ]},
+  { group: "Intelligence", items: [
     { to: "/monitoring", label: "Real-Time Monitoring", icon: Activity, badge: "LIVE" },
     { to: "/transactions", label: "Transactions", icon: Boxes },
     { to: "/alerts", label: "Alerts", icon: AlertTriangle, badge: "284" },
@@ -30,11 +33,18 @@ const NAV: { group: string; items: NavItem[] }[] = [
     { to: "/copilot", label: "AI Copilot", icon: Bot },
     { to: "/forecasting", label: "Forecasting", icon: TrendingUp },
     { to: "/simulation", label: "Simulation Lab", icon: Radar },
+    { to: "/risk", label: "Risk Orchestration", icon: Workflow },
+  ]},
+  { group: "MLOps", items: [
+    { to: "/features", label: "Feature Intelligence", icon: Database },
+    { to: "/models", label: "Model Intelligence", icon: Cpu },
+    { to: "/governance", label: "Model Governance", icon: Gauge },
+    { to: "/feedback", label: "Feedback Learning", icon: Brain },
   ]},
   { group: "Governance", items: [
     { to: "/compliance", label: "Compliance", icon: ShieldCheck },
-    { to: "/models", label: "Model Intelligence", icon: Cpu },
     { to: "/admin", label: "Administration", icon: Settings },
+    { to: "/enterprise", label: "Enterprise Admin", icon: Building2 },
   ]},
 ];
 
@@ -77,7 +87,9 @@ export function AppSidebar() {
                       {item.badge && (
                         <span className={cn(
                           "text-[9px] mono px-1.5 py-0.5 rounded uppercase tracking-wider",
-                          item.badge === "LIVE" ? "bg-status-clear/15 text-status-clear" : "bg-risk-high/15 text-risk-high",
+                          item.badge === "LIVE" ? "bg-status-clear/15 text-status-clear" :
+                          item.badge === "NEW" ? "bg-primary/15 text-primary" :
+                          "bg-risk-high/15 text-risk-high",
                         )}>{item.badge}</span>
                       )}
                     </Link>
