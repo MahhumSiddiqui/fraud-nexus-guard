@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Panel } from "@/components/panel";
 import { StatusPill } from "@/components/risk-badge";
 import { generateTransactions, type Transaction } from "@/lib/mock-data";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Brain, ChevronRight, Filter, MapPin, Shield, Sparkles } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { predictFraud, explainFraud } from "@/lib/api/example.functions";
@@ -94,8 +94,11 @@ function TransactionsPage() {
   const [shap, setShap] = useState(DEFAULT_SHAP);
   const [apiState, setApiState] = useState<"idle" | "loading" | "ok" | "error">("idle");
   const [apiError, setApiError] = useState<string | null>(null);
+  const lastProcessedId = useRef<string | null>(null);
 
   useEffect(() => {
+    if (lastProcessedId.current === selected.id) return;
+    lastProcessedId.current = selected.id;
     let cancelled = false;
     setApiState("loading");
     setApiError(null);
@@ -165,7 +168,7 @@ function TransactionsPage() {
     return () => {
       cancelled = true;
     };
-  }, [selected]);
+  }, [selected.id]);
 
   const displayRisk = liveRisk ?? selected.risk;
   const displayConfidence = liveConfidence ?? selected.confidence;
