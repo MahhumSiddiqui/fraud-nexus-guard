@@ -1,22 +1,136 @@
-import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
+// AFIOS backend API helper.
+// Uses fetch() against the FastAPI MVP. No new dependencies.
+// Safe to import from client components (no server-only imports).
 
-import { getServerConfig } from "../config.server";
+const AFIOS_BASE_URL =
+  (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_AFIOS_API_URL) ||
+  "http://127.0.0.1:8000";
 
-// Example createServerFn. Server-side handler invoked from the client:
-//   const result = await getGreeting({ data: { name: "Ada" } })
-// The .handler body runs server-only — imports used only inside it (like
-// .server.ts modules) are tree-shaken from the client bundle. Module-level
-// code here still ships to the client; for truly server-only helpers, put
-// them in a .server.ts file. Use this pattern instead of Supabase Edge
-// Functions for server logic.
+const TOKEN_KEY = "afios_jwt";
 
-export const getGreeting = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ name: z.string().min(1) }))
-  .handler(async ({ data }) => {
-    const config = getServerConfig();
-    return {
-      greeting: `Hello, ${data.name}!`,
-      mode: config.nodeEnv ?? "unknown",
-    };
+export function getToken(): string | null {
+  try {
+    if (typeof window === "undefined") return null;
+    return window.localStorage.getItem(TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function setToken(token: string | null) {
+  try {
+    if (typeof window === "undefined") return;
+    if (token) window.localStorage.setItem(TOKEN_KEY, token);
+    else window.localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+export class AfiosApiError extends Error {
+  status: number;
+  payload?: unknown;
+  constructor(message: string, status: number, payload?: unknown) {
+    super(message);
+    this.status = status;
+    this.payload = payload;
+  }
+}
+
+async function request<T>(
+  path: string,
+  opts: { method?: string; body?: unknown; auth?: boolean; timeoutMs?: number } = {},
+): Promise<T> {
+  const { method = "GET", body, auth = false, timeoutMs = 8000 } = opts;
+  const url = `${AFIOS_BASE_URL}${path}`;
+
+  const headers: Record<string, string> = {};
+  if (body !== undefined) headers["Content-Type"] = "application/json";
+  if (auth) {
+    const t = getToken();
+    if (t) headers["Authorization"] = `Bearer ${t}`;
+  }
+
+  const controller =
+    typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timer = controller
+    ? setTimeout(() => controller.abort(), timeoutMs)
+    : null;
+
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+      signal: controller?.signal,
+    });
+  } catch (err: any) {
+    if (timer) clearTimeout(timer);
+    throw new AfiosApiError(
+      err?.name === "AbortError" ? "Request timed out" : "Network error",
+      0,
+    );
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+
+  let payload: any = null;
+  const text = await res.text();
+  if (text) {
+    try {
+      payload = JSON.parse(text);
+    } catch {
+      payload = text;
+    }
+  }
+
+  if (!res.ok) {
+    if (res.status === 401 && auth) setToken(null);
+    const msg =
+      (payload && (payload.detail || payload.message)) ||
+      `Request failed (${res.status})`;
+    throw new AfiosApiError(typeof msg === "string" ? msg : "Request failed", res.status, payload);
+  }
+
+  return payload as T;
+}
+
+// ---- Endpoints ----
+
+export interface LoginResponse {
+  access_token: string;
+  token_type?: string;
+}
+
+export async function login(
+  username: string,
+  password: string,
+): Promise<LoginResponse> {
+  const data = await request<LoginResponse>("/api/v1/auth/login", {
+    method: "POST",
+    body: { username, password },
   });
+  if (data?.access_token) setToken(data.access_token);
+  return data;
+}
+
+export async function healthCheck(): Promise<{ status?: string } & Record<string, unknown>> {
+  return request("/health");
+}
+
+export async function predictFraud<T = any>(payload: Record<string, unknown>): Promise<T> {
+  return request<T>("/scoring/predict", {
+    method: "POST",
+    body: payload,
+    auth: true,
+  });
+}
+
+export async function explainFraud<T = any>(payload: Record<string, unknown>): Promise<T> {
+  return request<T>("/explainability/explain", {
+    method: "POST",
+    body: payload,
+    auth: true,
+  });
+}
