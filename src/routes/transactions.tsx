@@ -232,7 +232,17 @@ function TransactionsPage() {
               <p className="mt-2 text-[12.5px] leading-relaxed text-foreground/90">
                 Transaction exceeds the customer's typical spending behavior by <b className="text-primary">6.4×</b> and originates from a device first seen <b>11 minutes</b> ago.
                 The merchant has elevated card-testing velocity in the last hour. Combined with an ASN flagged in two prior fraud rings,
-                <b className="text-risk-high"> aggregate risk = {selected.risk}</b>. Recommend <b>step-up authentication</b> before settlement.
+                <b className="text-risk-high"> aggregate risk = {displayRisk}</b>. Recommend <b>step-up authentication</b> before settlement.
+                {apiState === "error" && (
+                  <span className="block mt-2 text-[10px] mono uppercase tracking-widest text-muted-foreground">
+                    Backend offline · showing baseline scores{apiError ? ` (${apiError})` : ""}
+                  </span>
+                )}
+                {apiState === "loading" && (
+                  <span className="block mt-2 text-[10px] mono uppercase tracking-widest text-muted-foreground">
+                    Scoring via AFIOS backend…
+                  </span>
+                )}
               </p>
               <div className="mt-2 flex gap-1.5">
                 <Chip>Hold for review</Chip>
