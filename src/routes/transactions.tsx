@@ -1,30 +1,160 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Panel } from "@/components/panel";
 import { StatusPill } from "@/components/risk-badge";
-import { generateTransactions } from "@/lib/mock-data";
-import { useMemo, useState } from "react";
+import { generateTransactions, type Transaction } from "@/lib/mock-data";
+import { useEffect, useMemo, useState } from "react";
 import { Brain, ChevronRight, Filter, MapPin, Shield, Sparkles } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { predictFraud, explainFraud } from "@/lib/api/example.functions";
 
 export const Route = createFileRoute("/transactions")({
   head: () => ({ meta: [{ title: "Transactions — AFIOS" }] }),
   component: TransactionsPage,
 });
 
+const DEFAULT_SHAP = [
+  { f: "amount_zscore", v: 0.42 },
+  { f: "device_unseen", v: 0.31 },
+  { f: "merchant_velocity_1h", v: 0.18 },
+  { f: "geo_distance_24h", v: 0.14 },
+  { f: "mcc_unusual_for_customer", v: 0.09 },
+  { f: "ip_asn_risk", v: 0.06 },
+  { f: "time_of_day_anomaly", v: -0.04 },
+  { f: "card_age_days", v: -0.07 },
+];
+
+function toScoringPayload(t: Transaction) {
+  return {
+    transaction_id: t.id,
+    customer_id: t.customer,
+    amount: t.amount,
+    currency: t.currency,
+    merchant: t.merchant,
+    mcc: t.mcc,
+    country: t.country,
+    device_id: t.device,
+    ip: t.ip,
+    channel: t.channel,
+    timestamp: t.ts,
+  };
+}
+
+function extractRisk(resp: any): { risk?: number; confidence?: number; status?: string } {
+  if (!resp || typeof resp !== "object") return {};
+  const raw =
+    resp.risk_score ?? resp.risk ?? resp.score ?? resp.fraud_score ?? resp.probability;
+  const risk =
+    typeof raw === "number" ? (raw <= 1 ? Math.round(raw * 100) : Math.round(raw)) : undefined;
+  const confRaw = resp.confidence ?? resp.model_confidence;
+  const confidence =
+    typeof confRaw === "number"
+      ? confRaw <= 1
+        ? Math.round(confRaw * 100)
+        : Math.round(confRaw)
+      : undefined;
+  const status = resp.decision ?? resp.status ?? resp.label;
+  return { risk, confidence, status };
+}
+
+function extractShap(resp: any): { f: string; v: number }[] | null {
+  if (!resp) return null;
+  const src =
+    resp.shap ??
+    resp.shap_values ??
+    resp.feature_attributions ??
+    resp.features ??
+    resp.explanations;
+  if (!src) return null;
+  if (Array.isArray(src)) {
+    const mapped = src
+      .map((e: any) => {
+        if (e == null) return null;
+        const f = e.feature ?? e.name ?? e.f;
+        const v = e.value ?? e.contribution ?? e.weight ?? e.v;
+        if (f == null || typeof v !== "number") return null;
+        return { f: String(f), v };
+      })
+      .filter(Boolean) as { f: string; v: number }[];
+    return mapped.length ? mapped.slice(0, 10) : null;
+  }
+  if (typeof src === "object") {
+    const arr = Object.entries(src)
+      .filter(([, v]) => typeof v === "number")
+      .map(([f, v]) => ({ f, v: v as number }));
+    return arr.length ? arr.slice(0, 10) : null;
+  }
+  return null;
+}
+
 function TransactionsPage() {
   const txns = useMemo(() => generateTransactions(60), []);
   const [selected, setSelected] = useState(txns[0]);
+  const [liveRisk, setLiveRisk] = useState<number | null>(null);
+  const [liveConfidence, setLiveConfidence] = useState<number | null>(null);
+  const [shap, setShap] = useState(DEFAULT_SHAP);
+  const [apiState, setApiState] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [apiError, setApiError] = useState<string | null>(null);
 
-  const shap = [
-    { f: "amount_zscore", v: 0.42 },
-    { f: "device_unseen", v: 0.31 },
-    { f: "merchant_velocity_1h", v: 0.18 },
-    { f: "geo_distance_24h", v: 0.14 },
-    { f: "mcc_unusual_for_customer", v: 0.09 },
-    { f: "ip_asn_risk", v: 0.06 },
-    { f: "time_of_day_anomaly", v: -0.04 },
-    { f: "card_age_days", v: -0.07 },
-  ];
+  useEffect(() => {
+    let cancelled = false;
+    setApiState("loading");
+    setApiError(null);
+    setLiveRisk(null);
+    setLiveConfidence(null);
+    setShap(DEFAULT_SHAP);
+
+    const payload = toScoringPayload(selected);
+    (async () => {
+      try {
+        const [score, expl] = await Promise.allSettled([
+          predictFraud(payload),
+          explainFraud(payload),
+        ]);
+        if (cancelled) return;
+
+        let okAny = false;
+        if (score.status === "fulfilled") {
+          const { risk, confidence } = extractRisk(score.value);
+          if (typeof risk === "number") {
+            setLiveRisk(risk);
+            okAny = true;
+          }
+          if (typeof confidence === "number") setLiveConfidence(confidence);
+        }
+        if (expl.status === "fulfilled") {
+          const s = extractShap(expl.value);
+          if (s && s.length) {
+            setShap(s);
+            okAny = true;
+          }
+        }
+
+        if (okAny) {
+          setApiState("ok");
+        } else {
+          const err =
+            score.status === "rejected"
+              ? score.reason
+              : expl.status === "rejected"
+                ? expl.reason
+                : null;
+          setApiState("error");
+          setApiError(err?.message ?? "Backend returned no usable data");
+        }
+      } catch (err: any) {
+        if (cancelled) return;
+        setApiState("error");
+        setApiError(err?.message ?? "Backend unavailable");
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selected]);
+
+  const displayRisk = liveRisk ?? selected.risk;
+  const displayConfidence = liveConfidence ?? selected.confidence;
 
   return (
     <div className="space-y-6">
