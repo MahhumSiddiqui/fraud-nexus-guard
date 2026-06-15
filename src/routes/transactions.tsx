@@ -222,7 +222,7 @@ function TransactionsPage() {
               <Field label="Merchant" value={selected.merchant} />
               <Field label="MCC" value={selected.mcc} mono />
               <Field label="Device" value={selected.device} mono />
-              <Field label="Confidence" value={`${selected.confidence}%`} />
+              <Field label="Confidence" value={`${displayConfidence}%`} />
             </dl>
 
             <div className="mt-4 surface-panel p-3 bg-primary/5 border-primary/30">
