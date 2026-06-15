@@ -57,6 +57,9 @@ async function request<T>(
     ? setTimeout(() => controller.abort(), timeoutMs)
     : null;
 
+  // eslint-disable-next-line no-console
+  console.debug("[AFIOS] →", method, url, body);
+
   let res: Response;
   try {
     res = await fetch(url, {
@@ -67,6 +70,8 @@ async function request<T>(
     });
   } catch (err: any) {
     if (timer) clearTimeout(timer);
+    // eslint-disable-next-line no-console
+    console.error("[AFIOS] ✕ network", url, err);
     throw new AfiosApiError(
       err?.name === "AbortError" ? "Request timed out" : "Network error",
       0,
@@ -87,12 +92,20 @@ async function request<T>(
 
   if (!res.ok) {
     if (res.status === 401 && auth) setToken(null);
+    // eslint-disable-next-line no-console
+    console.error("[AFIOS] ✕", res.status, url, payload);
     const msg =
       (payload && (payload.detail || payload.message)) ||
       `Request failed (${res.status})`;
-    throw new AfiosApiError(typeof msg === "string" ? msg : "Request failed", res.status, payload);
+    throw new AfiosApiError(
+      typeof msg === "string" ? msg : JSON.stringify(msg),
+      res.status,
+      payload,
+    );
   }
 
+  // eslint-disable-next-line no-console
+  console.debug("[AFIOS] ←", res.status, url, payload);
   return payload as T;
 }
 
@@ -119,18 +132,39 @@ export async function healthCheck(): Promise<{ status?: string } & Record<string
   return request("/health");
 }
 
-export async function predictFraud<T = any>(payload: Record<string, unknown>): Promise<T> {
+export interface ScoringTransaction {
+  transaction_id: string;
+  customer_id: string;
+  amount: number;
+  currency: string;
+  merchant: string;
+  mcc: string;
+  country: string;
+  device_id: string;
+  ip: string;
+  channel: string;
+  timestamp: string;
+}
+
+export async function predictFraud<T = any>(
+  transaction: ScoringTransaction,
+  features: Record<string, unknown> = {},
+): Promise<T> {
   return request<T>("/scoring/predict", {
     method: "POST",
-    body: payload,
+    body: { transaction, features },
     auth: true,
   });
 }
 
-export async function explainFraud<T = any>(payload: Record<string, unknown>): Promise<T> {
+export async function explainFraud<T = any>(
+  transaction: ScoringTransaction,
+  model_score: number,
+  features: Record<string, unknown> = {},
+): Promise<T> {
   return request<T>("/explainability/explain", {
     method: "POST",
-    body: payload,
+    body: { transaction, features, model_score },
     auth: true,
   });
 }

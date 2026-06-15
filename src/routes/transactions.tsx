@@ -103,44 +103,58 @@ function TransactionsPage() {
     setLiveConfidence(null);
     setShap(DEFAULT_SHAP);
 
-    const payload = toScoringPayload(selected);
+    const transaction = toScoringPayload(selected);
     (async () => {
       try {
-        const [score, expl] = await Promise.allSettled([
-          predictFraud(payload),
-          explainFraud(payload),
-        ]);
-        if (cancelled) return;
-
+        // Step 1: predict
+        let scoreResp: any = null;
         let okAny = false;
-        if (score.status === "fulfilled") {
-          const { risk, confidence } = extractRisk(score.value);
+        try {
+          scoreResp = await predictFraud(transaction, {});
+          const { risk, confidence } = extractRisk(scoreResp);
           if (typeof risk === "number") {
             setLiveRisk(risk);
             okAny = true;
           }
           if (typeof confidence === "number") setLiveConfidence(confidence);
+        } catch (err: any) {
+          if (cancelled) return;
+          setApiState("error");
+          setApiError(err?.message ?? "Scoring failed");
+          return;
         }
-        if (expl.status === "fulfilled") {
-          const s = extractShap(expl.value);
+        if (cancelled) return;
+
+        // Step 2: derive model_score for explainability
+        const rawScore =
+          scoreResp?.fraud_score ??
+          scoreResp?.risk_score ??
+          scoreResp?.score ??
+          scoreResp?.probability ??
+          0;
+        const modelScore =
+          typeof rawScore === "number"
+            ? rawScore > 1
+              ? rawScore / 100
+              : rawScore
+            : 0;
+
+        // Step 3: explain
+        try {
+          const explResp = await explainFraud(transaction, modelScore, {});
+          if (cancelled) return;
+          const s = extractShap(explResp);
           if (s && s.length) {
             setShap(s);
             okAny = true;
           }
+        } catch (err: any) {
+          // eslint-disable-next-line no-console
+          console.warn("[AFIOS] explain failed", err);
         }
 
-        if (okAny) {
-          setApiState("ok");
-        } else {
-          const err =
-            score.status === "rejected"
-              ? score.reason
-              : expl.status === "rejected"
-                ? expl.reason
-                : null;
-          setApiState("error");
-          setApiError(err?.message ?? "Backend returned no usable data");
-        }
+        setApiState(okAny ? "ok" : "error");
+        if (!okAny) setApiError("Backend returned no usable data");
       } catch (err: any) {
         if (cancelled) return;
         setApiState("error");
