@@ -154,7 +154,7 @@ function TransactionsPage() {
           if (cancelled) return;
           const s = extractShap(explResp);
           if (s && s.length) {
-            setShap(s);
+            setShap([...s]);
             okAny = true;
           }
         } catch (err: any) {
@@ -278,7 +278,7 @@ function TransactionsPage() {
           <Panel title="SHAP — Feature Attribution" subtitle="Why the model decided this">
             <div className="h-[220px]">
               <ResponsiveContainer>
-                <BarChart data={shap} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 0 }}>
+                <BarChart key={selected.id} data={shap} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 0 }}>
                   <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" horizontal={false} />
                   <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 10, fontFamily: "var(--font-mono)" }} axisLine={false} tickLine={false} />
                   <YAxis type="category" dataKey="f" width={170} tick={{ fill: "var(--muted-foreground)", fontSize: 10, fontFamily: "var(--font-mono)" }} axisLine={false} tickLine={false} />
