@@ -4,7 +4,7 @@ import { StatusPill } from "@/components/risk-badge";
 import { generateTransactions, type Transaction } from "@/lib/mock-data";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Brain, ChevronRight, Filter, MapPin, Shield, Sparkles } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { predictFraud, explainFraud } from "@/lib/api/example.functions";
 
 export const Route = createFileRoute("/transactions")({
@@ -44,7 +44,13 @@ function extractRisk(resp: any): { risk?: number; confidence?: number; status?: 
   const raw =
     resp.risk_score ?? resp.risk ?? resp.score ?? resp.fraud_score ?? resp.probability;
   const risk =
-    typeof raw === "number" ? (raw <= 1 ? Math.round(raw * 100) : Math.round(raw)) : undefined;
+    typeof raw === "number"
+      ? raw <= 1
+        ? raw * 100 < 1
+          ? parseFloat((raw * 100).toFixed(2))
+          : Math.round(raw * 100)
+        : Math.round(raw)
+      : undefined;
   const confRaw = resp.confidence ?? resp.model_confidence;
   const confidence =
     typeof confRaw === "number"
@@ -277,7 +283,7 @@ function TransactionsPage() {
                   <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 10, fontFamily: "var(--font-mono)" }} axisLine={false} tickLine={false} />
                   <YAxis type="category" dataKey="f" width={170} tick={{ fill: "var(--muted-foreground)", fontSize: 10, fontFamily: "var(--font-mono)" }} axisLine={false} tickLine={false} />
                   <Bar dataKey="v" radius={[0, 2, 2, 0]}>
-                    {shap.map((s, i) => <rect key={i} fill={s.v >= 0 ? "var(--risk-high)" : "var(--risk-safe)"} />)}
+                    {shap.map((s, i) => <Cell key={i} fill={s.v >= 0 ? "var(--risk-high)" : "var(--risk-safe)"} />)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
