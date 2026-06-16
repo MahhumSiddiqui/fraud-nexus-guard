@@ -4,7 +4,7 @@ import { StatusPill } from "@/components/risk-badge";
 import { generateTransactions, type Transaction } from "@/lib/mock-data";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Brain, ChevronRight, Filter, MapPin, Shield, Sparkles } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { predictFraud, explainFraud } from "@/lib/api/example.functions";
 
 export const Route = createFileRoute("/transactions")({
