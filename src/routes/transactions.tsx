@@ -154,7 +154,7 @@ function TransactionsPage() {
           if (cancelled) return;
           const s = extractShap(explResp);
           if (s && s.length) {
-            setShap(s);
+            setShap([...s]);
             okAny = true;
           }
         } catch (err: any) {
