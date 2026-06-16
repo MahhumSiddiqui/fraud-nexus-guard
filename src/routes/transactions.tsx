@@ -41,8 +41,7 @@ function toScoringPayload(t: Transaction) {
 
 function extractRisk(resp: any): { risk?: number; confidence?: number; status?: string } {
   if (!resp || typeof resp !== "object") return {};
-  const raw =
-    resp.risk_score ?? resp.risk ?? resp.score ?? resp.fraud_score ?? resp.probability;
+  const raw = resp.fraud_score;
   const risk =
     typeof raw === "number"
       ? raw <= 1
@@ -100,17 +99,15 @@ function TransactionsPage() {
   const [shap, setShap] = useState(DEFAULT_SHAP);
   const [apiState, setApiState] = useState<"idle" | "loading" | "ok" | "error">("idle");
   const [apiError, setApiError] = useState<string | null>(null);
-  const lastProcessedId = useRef<string | null>(null);
+  const apiEverOk = useRef(false);
 
   useEffect(() => {
-    if (lastProcessedId.current === selected.id) return;
-    lastProcessedId.current = selected.id;
     let cancelled = false;
     setApiState("loading");
     setApiError(null);
     setLiveRisk(null);
     setLiveConfidence(null);
-    setShap(DEFAULT_SHAP);
+    setShap(apiEverOk.current ? [] : DEFAULT_SHAP);
 
     const transaction = toScoringPayload(selected);
     (async () => {
@@ -123,6 +120,7 @@ function TransactionsPage() {
           const { risk, confidence } = extractRisk(scoreResp);
           if (typeof risk === "number") {
             setLiveRisk(risk);
+            apiEverOk.current = true;
             okAny = true;
           }
           if (typeof confidence === "number") setLiveConfidence(confidence);
@@ -135,12 +133,7 @@ function TransactionsPage() {
         if (cancelled) return;
 
         // Step 2: derive model_score for explainability
-        const rawScore =
-          scoreResp?.fraud_score ??
-          scoreResp?.risk_score ??
-          scoreResp?.score ??
-          scoreResp?.probability ??
-          0;
+        const rawScore = scoreResp?.fraud_score ?? 0;
         const modelScore =
           typeof rawScore === "number"
             ? rawScore > 1
@@ -154,6 +147,7 @@ function TransactionsPage() {
           if (cancelled) return;
           const s = extractShap(explResp);
           if (s && s.length) {
+            apiEverOk.current = true;
             setShap([...s]);
             okAny = true;
           }
@@ -176,7 +170,7 @@ function TransactionsPage() {
     };
   }, [selected.id]);
 
-  const displayRisk = liveRisk ?? selected.risk;
+  const displayRisk = liveRisk;
   const displayConfidence = liveConfidence ?? selected.confidence;
 
   return (
