@@ -251,7 +251,7 @@ function TransactionsPage() {
                 <b className="text-risk-high"> aggregate risk = {displayRisk}</b>. Recommend <b>step-up authentication</b> before settlement.
                 {apiState === "error" && (
                   <span className="block mt-2 text-[10px] mono uppercase tracking-widest text-muted-foreground">
-                    Backend offline · showing baseline scores{apiError ? ` (${apiError})` : ""}
+                    Backend offline · showing baseline scores
                   </span>
                 )}
                 {apiState === "loading" && (
