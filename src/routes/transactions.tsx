@@ -120,7 +120,6 @@ function TransactionsPage() {
           const { risk, confidence } = extractRisk(scoreResp);
           if (typeof risk === "number") {
             setLiveRisk(risk);
-            apiEverOk.current = true;
             okAny = true;
           }
           if (typeof confidence === "number") setLiveConfidence(confidence);
