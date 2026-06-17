@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Panel } from "@/components/panel";
 import { StatusPill } from "@/components/risk-badge";
 import { generateTransactions, type Transaction } from "@/lib/mock-data";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Brain, ChevronRight, Filter, MapPin, Shield, Sparkles } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { predictFraud, explainFraud } from "@/lib/api/example.functions";
@@ -99,7 +99,7 @@ function TransactionsPage() {
   const [shap, setShap] = useState(DEFAULT_SHAP);
   const [apiState, setApiState] = useState<"idle" | "loading" | "ok" | "error">("idle");
   const [apiError, setApiError] = useState<string | null>(null);
-  const apiEverOk = useRef(false);
+  
 
   useEffect(() => {
     let cancelled = false;
@@ -107,7 +107,7 @@ function TransactionsPage() {
     setApiError(null);
     setLiveRisk(null);
     setLiveConfidence(null);
-    setShap(apiEverOk.current ? [] : DEFAULT_SHAP);
+    setShap([]);
 
     const transaction = toScoringPayload(selected);
     (async () => {
@@ -120,7 +120,6 @@ function TransactionsPage() {
           const { risk, confidence } = extractRisk(scoreResp);
           if (typeof risk === "number") {
             setLiveRisk(risk);
-            apiEverOk.current = true;
             okAny = true;
           }
           if (typeof confidence === "number") setLiveConfidence(confidence);
@@ -147,7 +146,7 @@ function TransactionsPage() {
           if (cancelled) return;
           const s = extractShap(explResp);
           if (s && s.length) {
-            apiEverOk.current = true;
+            
             setShap([...s]);
             okAny = true;
           }
@@ -170,8 +169,8 @@ function TransactionsPage() {
     };
   }, [selected.id]);
 
-  const displayRisk = liveRisk;
-  const displayConfidence = liveConfidence ?? selected.confidence;
+  const displayRisk = liveRisk ?? 0;
+  const displayConfidence = liveConfidence ?? 0;
 
   return (
     <div className="space-y-6">
