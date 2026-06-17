@@ -107,7 +107,7 @@ function TransactionsPage() {
     setApiError(null);
     setLiveRisk(null);
     setLiveConfidence(null);
-    setShap(apiEverOk.current ? [] : DEFAULT_SHAP);
+    setShap([]);
 
     const transaction = toScoringPayload(selected);
     (async () => {
