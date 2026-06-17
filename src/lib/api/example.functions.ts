@@ -4,7 +4,7 @@
 
 const AFIOS_BASE_URL =
   (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_AFIOS_API_URL) ||
-  "http://127.0.0.1:8000";
+  "https://afios-backend.up.railway.app";
 
 const TOKEN_KEY = "afios_jwt";
 
