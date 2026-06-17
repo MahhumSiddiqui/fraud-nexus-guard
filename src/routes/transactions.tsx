@@ -146,7 +146,7 @@ function TransactionsPage() {
           if (cancelled) return;
           const s = extractShap(explResp);
           if (s && s.length) {
-            apiEverOk.current = true;
+            
             setShap([...s]);
             okAny = true;
           }
