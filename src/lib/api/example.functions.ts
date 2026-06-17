@@ -57,8 +57,10 @@ async function request<T>(
     ? setTimeout(() => controller.abort(), timeoutMs)
     : null;
 
-  // eslint-disable-next-line no-console
-  console.debug("[AFIOS] →", method, url, body);
+  if (import.meta.env?.DEV) {
+    // eslint-disable-next-line no-console
+    console.debug("[AFIOS] →", method, url);
+  }
 
   let res: Response;
   try {
