@@ -99,7 +99,7 @@ function TransactionsPage() {
   const [shap, setShap] = useState(DEFAULT_SHAP);
   const [apiState, setApiState] = useState<"idle" | "loading" | "ok" | "error">("idle");
   const [apiError, setApiError] = useState<string | null>(null);
-  const apiEverOk = useRef(false);
+  
 
   useEffect(() => {
     let cancelled = false;
