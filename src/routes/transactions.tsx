@@ -169,8 +169,8 @@ function TransactionsPage() {
     };
   }, [selected.id]);
 
-  const displayRisk = liveRisk;
-  const displayConfidence = liveConfidence ?? selected.confidence;
+  const displayRisk = liveRisk ?? 0;
+  const displayConfidence = liveConfidence ?? 0;
 
   return (
     <div className="space-y-6">
