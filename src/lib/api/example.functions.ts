@@ -57,8 +57,10 @@ async function request<T>(
     ? setTimeout(() => controller.abort(), timeoutMs)
     : null;
 
-  // eslint-disable-next-line no-console
-  console.debug("[AFIOS] →", method, url, body);
+  if (import.meta.env?.DEV) {
+    // eslint-disable-next-line no-console
+    console.debug("[AFIOS] →", method, url);
+  }
 
   let res: Response;
   try {
@@ -93,7 +95,7 @@ async function request<T>(
   if (!res.ok) {
     if (res.status === 401 && auth) setToken(null);
     // eslint-disable-next-line no-console
-    console.error("[AFIOS] ✕", res.status, url, payload);
+    console.error("[AFIOS] ✕", res.status, url);
     const msg =
       (payload && (payload.detail || payload.message)) ||
       `Request failed (${res.status})`;
@@ -104,8 +106,10 @@ async function request<T>(
     );
   }
 
-  // eslint-disable-next-line no-console
-  console.debug("[AFIOS] ←", res.status, url, payload);
+  if (import.meta.env?.DEV) {
+    // eslint-disable-next-line no-console
+    console.debug("[AFIOS] ←", res.status, url);
+  }
   return payload as T;
 }
 
