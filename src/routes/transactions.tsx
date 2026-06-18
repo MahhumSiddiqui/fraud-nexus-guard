@@ -112,11 +112,21 @@ function TransactionsPage() {
     const transaction = toScoringPayload(selected);
     (async () => {
       try {
+        const features = {
+          amount: selected.amount,
+          merchant: selected.merchant,
+          country: selected.country,
+          mcc: selected.mcc,
+          channel: selected.channel,
+          device: selected.device,
+          ip: selected.ip,
+        };
+
         // Step 1: predict
         let scoreResp: any = null;
         let okAny = false;
         try {
-          scoreResp = await predictFraud(transaction, {});
+          scoreResp = await predictFraud(transaction, features);
           const { risk, confidence } = extractRisk(scoreResp);
           if (typeof risk === "number") {
             setLiveRisk(risk);
@@ -142,7 +152,7 @@ function TransactionsPage() {
 
         // Step 3: explain
         try {
-          const explResp = await explainFraud(transaction, modelScore, {});
+          const explResp = await explainFraud(transaction, modelScore, features);
           if (cancelled) return;
           const s = extractShap(explResp);
           if (s && s.length) {
